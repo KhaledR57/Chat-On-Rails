@@ -24,6 +24,8 @@ services:
       DB_PASSWORD: root
       DB_HOST: db
       RAILS_ENV: development
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      REDIS_URL: redis://redis:6379/0
     restart: always
     volumes:
       - ./:/rails
@@ -32,8 +34,43 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+      - elasticsearch
+      - sidekiq
     links:
       - db
+
+  # Elasticsearch service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    mem_limit: 1g
+    ports:
+      - "9200:9200"
+    depends_on:
+      - db
+
+  # Redis service
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    depends_on:
+      - db
+    # volumes: 
+    # - cache:/data
+
+  # Sidekiq worker
+  sidekiq:
+    build: .
+    command: "bundle exec sidekiq"
+    container_name: sidekiq
+    depends_on:
+      - db
+      - redis
 
 volumes:
   mysql_vol:

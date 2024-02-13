@@ -10,5 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_13_013131) do
+  create_table "chats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "number"
+    t.integer "messages_count", default: 0
+    t.bigint "my_application_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["my_application_id", "number"], name: "index_chats_on_my_application_id_and_number", unique: true
+    t.index ["my_application_id"], name: "index_chats_on_my_application_id"
+  end
+
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "body"
+    t.integer "number"
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id", "number"], name: "index_messages_on_chat_id_and_number", unique: true
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
+  create_table "my_applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "token"
+    t.integer "chats_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_my_applications_on_token", unique: true
+  end
+
+  add_foreign_key "chats", "my_applications"
+  add_foreign_key "messages", "chats"
 end
