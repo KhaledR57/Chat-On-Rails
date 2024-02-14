@@ -1,0 +1,8 @@
+github.com/Scalingo/go-workers v0.0.0-20150506000945-5a3fe4ca9668 h1:amu2fnl1Q4c7l6AS+mTF25dpgUjMOLeufbCIUEaQbRQ=
+github.com/Scalingo/go-workers v0.0.0-20150506000945-5a3fe4ca9668/go.mod h1:QOmn02w4gJ/97T2WOkK9SNhLRmzXTi7tKQDqxm/aMXM=
+github.com/bitly/go-simplejson v0.5.1 h1:xgwPbetQScXt1gh9BmoJ6j9JMr3TElvuIyjR8pgdoow=
+github.com/bitly/go-simplejson v0.5.1/go.mod h1:YOPVLzCfwK14b4Sff3oP1AmGhI9T9Vsg84etUnlyp+Q=
+github.com/customerio/gospec v0.0.0-20130710230057-a5cc0e48aa39 h1:O0YTztXI3XeJXlFhSo4wNb0VBVqSgT+hi/CjNWKvMnY=
+github.com/customerio/gospec v0.0.0-20130710230057-a5cc0e48aa39/go.mod h1:OzYUFhPuL2JbjwFwrv6CZs23uBawekc6OZs+g19F0mY=
+github.com/garyburd/redigo v1.6.4 h1:LFu2R3+ZOPgSMWMOL+saa/zXRjw0ID2G8FepO53BGlg=
+github.com/garyburd/redigo v1.6.4/go.mod h1:rTb6epsqigu3kYKBnaF028A7Tf/Aw5s0cqA47doKKqw=

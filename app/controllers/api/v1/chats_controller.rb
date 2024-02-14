@@ -20,13 +20,13 @@ class Api::V1::ChatsController < ApplicationController
 
   # POST /api/v1/chats
   def create
-    @chat = Chat.new(my_application_id: @my_application.id)
+    incr_chat_count(@my_application.id)
+    chat_number = get_chat_num(params[:my_application_token])
+    
+    # Queue the message creation
+    ChatCreationJob.perform_async(@my_application.id, chat_number)
 
-    if @chat.save
-      render json: @chat, status: :created
-    else
-      render json: @chat.errors, status: :unprocessable_entity
-    end
+    render json: { application_token: params[:my_application_token], chat_number: chat_number }, status: :accepted
   end
 
   # PATCH/PUT /api/v1/chats/1
@@ -40,25 +40,31 @@ class Api::V1::ChatsController < ApplicationController
 
   # DELETE /api/v1/chats/1
   def destroy
-    if @chat&.destroy
-      head :no_content
-    else
-        render json: { error: 'Could not delete chat' }, status: 422
-    end
+    @chat.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_chat
-      @chat = @my_application.chats.find_by_number(params[:chat_number])
+      @chat = @my_application.chats.find_by_number(params[:number])
+      @chat || (render json: { error: 'Could not find chat!' }, status: :not_found)
     end
 
     def set_my_application
       @my_application = MyApplication.find_by_token(params[:my_application_token])
+      @my_application || (render json: { error: 'Could not find application!' }, status: :not_found)
     end
 
     # Only allow a list of trusted parameters through.
     def chat_params
       params.require(:chat).permit(:my_application_token)
+    end
+
+    def get_chat_num(application_token)
+      $redis.incr("chat_counter&#{application_token}")
+    end
+
+    def incr_chat_count(application_id)
+      $redis.incr("chats_count&#{application_id}")
     end
 end

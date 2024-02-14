@@ -1,5 +1,5 @@
 class Api::V1::MessagesController < ApplicationController
-  before_action :set_my_application
+  
   before_action :set_chat
   before_action :set_message, only: %i[ show update destroy ]
 
@@ -7,13 +7,13 @@ class Api::V1::MessagesController < ApplicationController
   def index
     @messages = @chat.messages.all
 
-    render json: @messages
+    render json: @messages.as_json(only: [:number, :body])
   end
 
   # GET /api/v1/messages/1
   def show
     if @message
-      render json: @message
+      render json: @message.as_json(only: [:number, :body])
     else
       render json: { error: 'Could not find message' }, status: :not_found
     end
@@ -21,21 +21,21 @@ class Api::V1::MessagesController < ApplicationController
 
   # POST /api/v1/messages
   def create
-    @message = Message.new(chat_id: @chat.id, body: params[:body])
+    incr_message_count(@chat.id)
+    message_number = get_message_num(params[:my_application_token], params[:chat_number])
+    # Queue the message creation
+    MessageCreationJob.perform_async(@chat.id, params[:body], message_number)
+    # Sidekiq::Client.push "class" => "MyGoWorker", "args" => [@chat.id, params[:body], message_number]
 
-    if @message.save
-      render json: @message, status: :created
-    else
-      render json: @message.errors, status: :unprocessable_entity
-    end
+    render json: { body: params[:body], message_number: message_number }, status: :accepted
   end
 
   # PATCH/PUT /api/v1/messages/1
   def update
     if @message.update(message_params)
-      render json: @message
+      render json: @message.as_json(only: [:number, :body])
     else
-      render json: @message.errors, status: :unprocessable_entity
+      render json: { errors: @message.errors } , status: :unprocessable_entity
     end
   end
 
@@ -49,26 +49,32 @@ class Api::V1::MessagesController < ApplicationController
   end
 
   def search
-    messages = Message.search(@chat.id, params[:query]).as_json(only: [:number, :body, :created_at, :updated_at])
-    render json: {messages:  messages}, status: :ok
+    result = Message.search(@chat.id, params[:query]).as_json(only: [:number, :body])
+    render json: {messages:  result}, status: :ok
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_message
       @message = @chat.messages.find_by_number(params[:id])
+      @message || (render json: { error: 'Could not find message!' }, status: :not_found) 
     end
 
     def set_chat
-      @chat = Chat.find_by(my_application: @my_application.id, number: params[:chat_number])
-    end
-
-    def set_my_application
-      @my_application = MyApplication.find_by_token(params[:my_application_token])
+      @chat = Chat.includes(:my_application).find_by(my_applications: { token: params[:my_application_token] }, number: params[:chat_number])
+      @chat || (render json: { error: 'Could not find chat!' }, status: :not_found)
     end
 
     # Only allow a list of trusted parameters through.
     def message_params
       params.require(:message).permit(:body)
+    end
+
+    def get_message_num(application_token, chat_number)
+      $redis.incr("message_counter&#{chat_number}&#{application_token}")
+    end
+
+    def incr_message_count(chat_id)
+      $redis.incr("messages_count&#{chat_id}")
     end
 end

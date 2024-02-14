@@ -5,12 +5,8 @@ class Message < ApplicationRecord
 
   validates :body, presence: true
 
-  before_create :set_number
-
-  private
-
-  def set_number
-      last_message = Message.where(chat_id: self.chat_id).order(number: :desc).first
-      self.number = last_message ? last_message.number + 1 : 1
-  end
+  # T3ml 2l2 de le elastic fantastic
+  # def as_json(options = nil)
+  #   super(only: [:number, :body])
+  # end
 end

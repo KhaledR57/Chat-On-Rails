@@ -23,10 +23,14 @@ services:
       DB_USER: root
       DB_PASSWORD: root
       DB_HOST: db
-      RAILS_ENV: development
+      RAILS_ENV: development # production
+      RAILS_MASTER_KEY: 61def8862ea958c3301eb21c807cae0e
       ES_PORT: 9200
       ES_HOST: 'elasticsearch'
-      REDIS_URL: redis://redis:6379/0
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      REDIS_URL: redis://redis:6379/1
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     restart: always
     volumes:
       - ./:/rails
@@ -36,10 +40,11 @@ services:
     depends_on:
       - db
       - redis
+      - sidekiq
       - elasticsearch
-      # - sidekiq
     links:
       - db
+      - sidekiq
       - elasticsearch
 
   # Elasticsearch service
@@ -75,18 +80,31 @@ services:
       - "6379:6379"
     depends_on:
       - db
-    # volumes: 
-    # - cache:/data
+    volumes:
+      - redis_vol:/data
 
   # Sidekiq worker
-  # sidekiq:
-  #   build: .
-  #   command: "bundle exec sidekiq"
-  #   container_name: sidekiq
-  #   depends_on:
-  #     - db
-  #     - redis
+  sidekiq:
+    build: .
+    command: "bundle exec sidekiq"
+    container_name: sidekiq
+    environment:
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_HOST: db
+      RAILS_ENV: development
+      ES_PORT: 9200
+      ES_HOST: 'elasticsearch'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379/1
+    depends_on:
+      - redis
+    volumes:
+    - ./:/rails   # I really hate hate docker >:(
+
 
 volumes:
   mysql_vol:
   es_vol:
+  redis_vol:

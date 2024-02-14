@@ -24,7 +24,7 @@ class Api::V1::MyApplicationsController < ApplicationController
       if @my_application.save
         render json: @my_application, status: :created
       else
-        render json: @my_application.errors, status: :unprocessable_entity
+        render json: { errors: @my_application.errors }, status: :unprocessable_entity
       end
     end
 
@@ -33,23 +33,20 @@ class Api::V1::MyApplicationsController < ApplicationController
       if @my_application.update(my_application_params)
         render json: @my_application
       else
-        render json: @my_application.errors, status: :unprocessable_entity
+        render json: { errors: @my_application.errors }, status: :unprocessable_entity
       end
     end
 
     # DELETE /api/v1/my_applications/1
     def destroy
-      if @my_application&.destroy
-        head :no_content
-      else
-        render json: { error: 'Could not find application' }, status: :not_found
-      end
+      @my_application.destroy
     end
 
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_my_application
         @my_application = MyApplication.find_by_token(params[:token])
+        @my_application || (render json: { error: 'Could not find application!' }, status: :not_found)
       end
 
       # Only allow a list of trusted parameters through.

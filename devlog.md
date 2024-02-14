@@ -65,3 +65,5 @@ TODO: join tables
 [I love this man](https://tihandev.com/how-to-integrate-elasticsearch-with-ruby-on-rails/)
 
 [And this issue](https://github.com/elastic/elasticsearch-rails/issues/768)
+
+[I hate docker 2](https://stackoverflow.com/questions/33563161/how-to-put-sidekiq-into-docker-in-a-rails-application)
