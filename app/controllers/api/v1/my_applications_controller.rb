@@ -10,7 +10,11 @@ class Api::V1::MyApplicationsController < ApplicationController
 
     # GET /api/v1/my_applications/1
     def show
-      render json: @my_application
+      if @my_application
+        render json: @my_application
+      else
+        render json: { error: 'Could not find application' }, status: :not_found
+      end
     end
 
     # POST /api/v1/my_applications
@@ -35,7 +39,11 @@ class Api::V1::MyApplicationsController < ApplicationController
 
     # DELETE /api/v1/my_applications/1
     def destroy
-      @my_application.destroy!
+      if @my_application&.destroy
+        head :no_content
+      else
+        render json: { error: 'Could not find application' }, status: :not_found
+      end
     end
 
     private

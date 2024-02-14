@@ -3,6 +3,8 @@ class MyApplication < ApplicationRecord
 
     has_many :chats
 
+    validates :name, presence: true
+    
     private
 
     # TODO: retry if failed

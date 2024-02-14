@@ -12,12 +12,16 @@ class Api::V1::MessagesController < ApplicationController
 
   # GET /api/v1/messages/1
   def show
-    render json: @message
+    if @message
+      render json: @message
+    else
+      render json: { error: 'Could not find message' }, status: :not_found
+    end
   end
 
   # POST /api/v1/messages
   def create
-    @message = Message.new(chat_id: @chat.id)
+    @message = Message.new(chat_id: @chat.id, body: params[:body])
 
     if @message.save
       render json: @message, status: :created
@@ -37,7 +41,16 @@ class Api::V1::MessagesController < ApplicationController
 
   # DELETE /api/v1/messages/1
   def destroy
-    @message.destroy!
+    if @message&.destroy
+      head :no_content
+    else
+      render json: { error: 'Could not delete message'  }, status: 422
+    end
+  end
+
+  def search
+    messages = Message.search(@chat.id, params[:query]).as_json(only: [:number, :body, :created_at, :updated_at])
+    render json: {messages:  messages}, status: :ok
   end
 
   private
@@ -56,6 +69,6 @@ class Api::V1::MessagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def message_params
-      params.require(:message).permit(:number, :body, :chat_id)
+      params.require(:message).permit(:body)
     end
 end

@@ -2,21 +2,36 @@ module SearchableMessage
     extend ActiveSupport::Concern
   
     included do
-      include Elasticsearch::Model
-      include Elasticsearch::Model::Callbacks
+        include Elasticsearch::Model
+        include Elasticsearch::Model::Callbacks
   
-      mapping do
-        indexes :chat_id, type: 'keyword'
-        indexes :body, type: 'text', analyzer: 'english'
-      end
+
+        # Every time our entry is created, updated, or deleted, we update the index accordingly.
+        # after_commit on: %i[create update] do
+        #     __elasticsearch__.index_document
+        # end
   
-      def self.search(query)
+        # after_commit on: %i[destroy] do
+        #     __elasticsearch__.delete_document
+        # end
+
+  
+        settings do
+            mappings dynamic: false do
+            # the chat_id must be of the keyword type since we're only going to use it to filter messages.
+            indexes :chat_id, type: :keyword
+            indexes :body, type: :text, analyzer: :english
+            end
+        end
+  
+      
+      def self.search(chat_id, query)
         params = {
             query: {
                 bool: {
                     must: {
                         term: {
-                            chat_id => chat.id
+                            chat_id: chat_id
                         }
                     },
                     filter: {

@@ -11,7 +11,11 @@ class Api::V1::ChatsController < ApplicationController
 
   # GET /api/v1/chats/1
   def show
-    render json: @chat
+    if @chat
+      render json: @chat
+    else
+      render json: { error: 'Could not find chat' }, status: :not_found
+    end
   end
 
   # POST /api/v1/chats
@@ -36,7 +40,11 @@ class Api::V1::ChatsController < ApplicationController
 
   # DELETE /api/v1/chats/1
   def destroy
-    @chat.destroy!
+    if @chat&.destroy
+      head :no_content
+    else
+        render json: { error: 'Could not delete chat' }, status: 422
+    end
   end
 
   private

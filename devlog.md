@@ -56,3 +56,12 @@ Consider mapping a numeric identifier as a keyword if:
 
 If you’re unsure which to use, you can use a multi-field to map the data as both a keyword and a numeric data type.
 ```
+
+TODO: join tables
+
+
+[route problemaaaa](https://stackoverflow.com/questions/13064844/rails-routing-on-collection)
+
+[I love this man](https://tihandev.com/how-to-integrate-elasticsearch-with-ruby-on-rails/)
+
+[And this issue](https://github.com/elastic/elasticsearch-rails/issues/768)
