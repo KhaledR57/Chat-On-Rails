@@ -31,12 +31,12 @@ docker compose up
 | **Chat**                                                                                                                                                                                |
 | Create Chat                                                                      | POST   | /applications/<application_token>/chats                                                     |
 | Get Chat                                                                         | GET    | /applications/<application_token>/chats/<chat_number>                                       |
-| All chats that belong to a specific application                                  | GET    | /applications/X1tXyNcwy_ntFXMSFnp4FA/chats                                                  |
+| All chats that belong to a specific application (with pagination)                | GET    | /applications/X1tXyNcwy_ntFXMSFnp4FA/chats?page=<page_number>                               |
 | Delete Chat                                                                      | DELETE | /applications/<application_token>/chats/<chat_number>                                       |
 | **Message**                                                                                                                                                                             |
 | Create Message                                                                   | POST   | /applications/<application_token>/chats/<chat_number>/messages                              |
 | Searching through messages of a specific chat (partially match messages’ bodies) | GET    | /applications/<application_token>/chats/<chat_number>/messages/search?query=<message_query> |
-| Get all messages that belong to a specific chat                                  | GET    | /applications/<application_token>/chats/<chat_number>/messages                              |
+| Get all messages that belong to a specific chat (with pagination)                | GET    | /applications/<application_token>/chats/<chat_number>/messages?page=<page_number>           |
 | Update Message                                                                   | PUT    | /applications/<application_token>/chats/<chat_number>/messages/<message_number>             |
 | Delete Message                                                                   | DELETE | /applications/<application_token>/chats/<chat_number>/messages/<message_number>             |
 
