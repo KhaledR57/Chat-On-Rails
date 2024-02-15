@@ -5,9 +5,21 @@ class Api::V1::MessagesController < ApplicationController
 
   # GET /api/v1/messages
   def index
-    @messages = @chat.messages.all
+    response = ""
+    page = params[:page] || 0   
+    rkey = "#{page}_messages"
+    
+    if $redis.exists(rkey) != 0
+      # puts "cached"
+      response = $redis.get(rkey)
+    else
+      @messages = page == 0 ? @chat.messages.all : @chat.messages.page(page)
+      response = JSON.dump(@messages.as_json(only: [:number, :body]))
+      $redis.set(rkey, response)
+      $redis.expire(rkey, 30.minutes.to_i)
+    end
 
-    render json: @messages.as_json(only: [:number, :body])
+    render json: response
   end
 
   # GET /api/v1/messages/1

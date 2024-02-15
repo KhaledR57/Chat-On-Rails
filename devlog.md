@@ -57,8 +57,6 @@ Consider mapping a numeric identifier as a keyword if:
 If you’re unsure which to use, you can use a multi-field to map the data as both a keyword and a numeric data type.
 ```
 
-TODO: join tables
-
 
 [route problemaaaa](https://stackoverflow.com/questions/13064844/rails-routing-on-collection)
 
@@ -67,3 +65,5 @@ TODO: join tables
 [And this issue](https://github.com/elastic/elasticsearch-rails/issues/768)
 
 [I hate docker 2](https://stackoverflow.com/questions/33563161/how-to-put-sidekiq-into-docker-in-a-rails-application)
+
+[Update and join](https://stackoverflow.com/questions/41334399/mysql-update-table-from-another-one-join-and-group-by)

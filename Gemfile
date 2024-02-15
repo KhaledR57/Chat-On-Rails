@@ -23,6 +23,7 @@ gem 'elasticsearch-rails'
 gem 'sidekiq'
 
 # gem 'whenever', require: false
+gem 'kaminari'
 
 gem 'rufus-scheduler'
 

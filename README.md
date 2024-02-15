@@ -1,24 +1,42 @@
-# README
+# Chat on Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Install
+```bash
+git clone git@github.com:KhaledR57/Chat-On-Rails.git
+cd Chat-On-Rails
+docker compose up
+```
 
-Things you may want to cover:
+## Ruby version
+- ruby 3.0.2
 
-* Ruby version
+## Gems
+- mysql2
+- redis
+- elasticsearch-model
+- elasticsearch-rails
+- sidekiq
+- kaminari
+- rufus-scheduler
 
-* System dependencies
+## API Endpoints
+| Action                                                                           | Method | Path                                                                                        |
+|----------------------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------------|
+| **Applicaion**                                                                                                                                                                          |
+| Create new application                                                           | POST   | /applications                                                                               |
+| Get an application                                                               | GET    | /applications/<application_token>                                                           |
+| All applications                                                                 | GET    | /applications                                                                               |
+| Update Application                                                               | PUT    | /applications/<application_token>                                                           |
+| Delete Application                                                               | DELETE | /applications/<application_token>                                                           |
+| **Chat**                                                                                                                                                                                |
+| Create Chat                                                                      | POST   | /applications/<application_token>/chats                                                     |
+| Get Chat                                                                         | GET    | /applications/<application_token>/chats/<chat_number>                                       |
+| All chats that belong to a specific application                                  | GET    | /applications/X1tXyNcwy_ntFXMSFnp4FA/chats                                                  |
+| Delete Chat                                                                      | DELETE | /applications/<application_token>/chats/<chat_number>                                       |
+| **Message**                                                                                                                                                                             |
+| Create Message                                                                   | POST   | /applications/<application_token>/chats/<chat_number>/messages                              |
+| Searching through messages of a specific chat (partially match messages’ bodies) | GET    | /applications/<application_token>/chats/<chat_number>/messages/search?query=<message_query> |
+| Get all messages that belong to a specific chat                                  | GET    | /applications/<application_token>/chats/<chat_number>/messages                              |
+| Update Message                                                                   | PUT    | /applications/<application_token>/chats/<chat_number>/messages/<message_number>             |
+| Delete Message                                                                   | DELETE | /applications/<application_token>/chats/<chat_number>/messages/<message_number>             |
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
