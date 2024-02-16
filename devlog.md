@@ -56,7 +56,7 @@ Consider mapping a numeric identifier as a keyword if:
 
 If you’re unsure which to use, you can use a multi-field to map the data as both a keyword and a numeric data type.
 ```
-
+# Day 5, 6, 7
 
 [route problemaaaa](https://stackoverflow.com/questions/13064844/rails-routing-on-collection)
 
@@ -67,3 +67,7 @@ If you’re unsure which to use, you can use a multi-field to map the data as bo
 [I hate docker 2](https://stackoverflow.com/questions/33563161/how-to-put-sidekiq-into-docker-in-a-rails-application)
 
 [Update and join](https://stackoverflow.com/questions/41334399/mysql-update-table-from-another-one-join-and-group-by)
+
+[go with rails](https://medium.com/@alexander.potrakhov/comparing-the-performance-of-ror-and-go-workers-in-the-background-processing-6b16f6f1bdf6)
+
+[Go MySQL](https://go.dev/doc/tutorial/database-access)

@@ -103,6 +103,23 @@ services:
     volumes:
     - ./:/rails   # I really hate hate docker >:(
 
+  go-service:
+    build: .
+    container_name: golang
+    working_dir: /rails/app/go/
+    command: "go run ."
+    restart: always
+    environment:
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_HOST: db
+      DB_NAME: chat_on_rails_development
+      DB_PORT: 3306
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/rails
 
 volumes:
   mysql_vol:

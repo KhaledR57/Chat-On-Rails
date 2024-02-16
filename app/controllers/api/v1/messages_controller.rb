@@ -35,8 +35,11 @@ class Api::V1::MessagesController < ApplicationController
   def create
     incr_message_count(@chat.id)
     message_number = get_message_num(params[:my_application_token], params[:chat_number])
+    
     # Queue the message creation
-    MessageCreationJob.perform_async(@chat.id, params[:body], message_number)
+    # MessageCreationJob.perform_async(@chat.id, params[:body], message_number)
+    # GOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    Resque.enqueue GoMessageCreationJob, @chat.id, params[:body], message_number
     # Sidekiq::Client.push "class" => "MyGoWorker", "args" => [@chat.id, params[:body], message_number]
 
     render json: { body: params[:body], message_number: message_number }, status: :accepted

@@ -27,6 +27,8 @@ gem 'kaminari'
 
 gem 'rufus-scheduler'
 
+gem 'resque'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
