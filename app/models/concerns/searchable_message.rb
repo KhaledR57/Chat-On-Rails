@@ -15,8 +15,10 @@ module SearchableMessage
         #     __elasticsearch__.delete_document
         # end
 
+        self.__elasticsearch__.create_index!
+        self.__elasticsearch__.refresh_index!
   
-        settings do
+        settings index: { number_of_shards: 1 } do
             mappings dynamic: false do
             # the chat_id must be of the keyword type since we're only going to use it to filter messages.
             indexes :chat_id, type: :keyword
@@ -44,6 +46,7 @@ module SearchableMessage
             }
         }
 
+        self.import
         self.__elasticsearch__.search(params).records
       end
     end
