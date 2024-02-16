@@ -10,13 +10,13 @@ class Api::V1::MessagesController < ApplicationController
     rkey = "#{page}_messages"
     
     if $redis.exists(rkey) != 0
-      # puts "cached"
+      puts "cached"
       response = $redis.get(rkey)
     else
       @messages = page == 0 ? @chat.messages.all : @chat.messages.page(page)
       response = JSON.dump(@messages.as_json(only: [:number, :body]))
       $redis.set(rkey, response)
-      $redis.expire(rkey, 30.minutes.to_i)
+      $redis.expire(rkey, 5.minutes.to_i)
     end
 
     render json: response

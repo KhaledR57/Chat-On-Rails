@@ -1,7 +1,7 @@
 class MyApplication < ApplicationRecord
     before_create :random_token
 
-    has_many :chats
+    has_many :chats, dependent: :destroy
 
     validates :name, presence: true
 

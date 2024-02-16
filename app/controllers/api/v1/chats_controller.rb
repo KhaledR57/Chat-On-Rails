@@ -15,7 +15,7 @@ class Api::V1::ChatsController < ApplicationController
       @messages = page == 0 ? @my_application.chats.all : @my_application.chats.page(page)
       response = JSON.dump(@messages.as_json(only: [:number, :body]))
       $redis.set(rkey, response)
-      $redis.expire(rkey, 30.minutes.to_i)
+      $redis.expire(rkey, 5.minutes.to_i)
     end
 
     render json: response
